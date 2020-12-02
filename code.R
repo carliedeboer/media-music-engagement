@@ -7,7 +7,7 @@
 #### INTRO #### 
 # As a music supervisor, I’ve always wanted to know what audio features of certain songs make them perfect for matching to film and TV A/V. 
 
-# In this project, I’ll use Tunefind’s Top 100 Songs of 2019 list merged with Spotify’s API to highlight common patterns and run a logistical regression model to predict what variables make these songs so “syncable”! 
+# In this project, I’ll use Tunefind’s Top 100 Songs of 2019 list merged with Spotify’s API to highlight common patterns and run a multivariable Logistic Regression model to predict what variables make these songs so “syncable”! 
 
 
 
