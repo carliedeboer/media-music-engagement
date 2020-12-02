@@ -1,13 +1,13 @@
 # WHAT MAKES A SONG "SYNCABLE"?
 # Carlie de Boer (she/her)
-# www.carliedeboer.com
-# Aug 2020
+# Dec 2020
+
 
 
 #### INTRO #### 
 # As a music supervisor, I’ve always wanted to know what audio features of certain songs make them perfect for matching to film and TV A/V. 
 
-# In this project, I’ll use TuneFind’s Top 100 Songs of 2019 list merged with Spotify’s API to highlight common patterns and run a logistical regression model to predict what variables make these songs so “syncable”! 
+# In this project, I’ll use Tunefind’s Top 100 Songs of 2019 list merged with Spotify’s API to highlight common patterns and run a logistical regression model to predict what variables make these songs so “syncable”! 
 
 
 
@@ -16,7 +16,7 @@
 
 # I'll use this (which contains Spotify track IDs) to obtain audio features from the Spotify API and add those to the dataset for analysis.
 
-#### 
+
 # Call the Spotify API.
 
 install.packages("tidyverse")
@@ -34,11 +34,9 @@ Sys.setenv(SPOTIFY_CLIENT_SECRET = '1c5a9b814c6b4fd281b17f27add79d4d')
 access_token <- get_spotify_access_token(client_id = Sys.getenv('SPOTIFY_CLIENT_ID'), client_secret = Sys.getenv('SPOTIFY_CLIENT_SECRET'))
 
 
-
 # DATA SET: Tunefind Top 100 Songs of 2019 ####
 tunefind_top_100 <- read.csv('/Users/carlief/Desktop/tf_top100_2019.csv')
 head(tunefind_top_100)
-
 
 # Run lapply() on Tunefind data to populate dataset with audio features from Spotify.
 tunefind_id <- pull(tunefind_top_100, 6)
@@ -52,7 +50,7 @@ tunefind_top_100_audio_features <- cbind(tunefind_top_100, spotify_audio_feature
 
 
 #### CLEANING THE DATA #### 
-# To clean the data, I'll perform the following:
+# To clean the data, I'll perform the following.
 
 head(tunefind_top_100_audio_features)
 summary(tunefind_top_100_audio_features)
@@ -85,16 +83,14 @@ tunefind_top_100_audio_features$mode <- as.logical(tunefind_top_100_audio_featur
 library(ggplot2)
 install.packages("ggplot2")
 library(ggplot)
-
-c
 library(corrplot)
 
 
+# CORRPLOT
 # Using the corrplot function, I can see the correlation between variables.
 corr_tftop100 <- tunefind_top_100_audio_features[5:17]
 mt_corr <- cor(corr_tftop100)
 corrplot(mt_corr, method = "circle", type = "upper", tl.srt = 50)
-
 
 # https://drive.google.com/file/d/1-A5p39P6hqelHGQzStp74SG3mxpXj0F8/view?usp=sharing 
 # Loudness and Energy are highly positively correlated.
@@ -102,8 +98,8 @@ corrplot(mt_corr, method = "circle", type = "upper", tl.srt = 50)
 # Energy and Acousticness are negatively correlated (a lot of acoustic songs are slow-tempo ballads!).
 
 
+# DENSITY PLOT
 # I can use a density plot to see how these three variables are distributed.
-
 corr_density <- ggplot(tunefind_top_100_audio_features) +
   geom_density(aes(energy, fill ="energy", alpha = 0.1)) + 
   geom_density(aes(valence, fill ="valence", alpha = 0.1)) + 
@@ -123,8 +119,8 @@ corr_density
 # The distribution of these three variables are very similar to each other (limited between 0 and 1).
 
 
+# COMMON KEY(S) AND TEMPO(S)
 # I'll uncover the most common key(s) and tempo(s) among these songs.
-
 song_keys <- tunefind_top_100_audio_features %>%
   group_by(key) %>%
   dplyr::summarise(n_key = n()) %>%
@@ -138,11 +134,11 @@ ggplot(song_keys, aes(x = reorder(key,-n_key), y = n_key, fill = reorder(key,-n_
   geom_text(aes(label=n_key), position = position_stack(vjust = 0.8)) +
   theme_bw() +
   theme(plot.title = element_text(size=15,face = "bold"), axis.title = element_text(size=12)) +
-  theme(legend.position="none")
-
+  theme(legend.position="none"
 
 # https://drive.google.com/file/d/1Z4m_FdB7oApCmpCIuSXp_DDBqwLfqDEv/view?usp=sharing
 # Looks like G, C and F are the most common keys.
+
 
 tempo_density <- ggplot(tunefind_top_100_audio_features) +
   geom_density(aes(tempo, fill ="tempo")) + 
@@ -161,19 +157,19 @@ tempo_density
 # Looks like most songs are hovering around 100-150 BPM. 
 
 
-# In summary, "syncable" songs seems to have the following features:
+# SUMMARY
+# "Syncable" songs seems to have the following features:
 # 1. Energy, Valence and Danceability with a value between 0 and 1.
 # 2. Loudness with a higher value, typically more than -7. 
 # 3. G, C and F are the most common Keys.
 # 4. Tempo is around 100-150 BPM. 
 
 
-#### PREDICTING "SYNCABILITY" ####
 
-# I'll run a multi-variable Logistic Regression model to predict which variables make a song "syncable" to see if it matches my findings. 
+#### PREDICTING "SYNCABILITY" ###
+# I'll run a multivariable Logistic Regression model to predict which variables make a song "syncable" to see if it matches my findings. 
 
-# To do so, I'll add additional data to my dataset and create a binary varible to indicate if the song was part of my original Tunefind list of songs that were synced ("YES") or not ("NO").
-
+# To do so, I'll add additional data to my dataset and create a binary variable to indicate if the song was part of my original Tunefind list of songs that were synced ("YES") or not ("NO").
 syncability <- tunefind_top_100_audio_features 
 newcol <- data.frame(synced=("YES"))
 syncability_new <- cbind(syncability, newcol)   
@@ -186,7 +182,6 @@ factor(additional_data_new$time_signature)
 additional_data_new$key <- as.character(additional_data_new$key)
 additional_data_new$key <- revalue(additional_data_new$key, c("0" = "C", "1" = "C♯,D♭", "2" = "D", "3" = 
                                                         "D♯,E♭", "4" = "E", "5" =  "F", "6" = "F♯,G♭","7" = "G","8" = "G♯,A♭","9" = "A","10" = "A♯,B♭","11" = "B"))
-
 additional_data_new$mode <- as.logical(additional_data_new$mode)
 additional_data_new$duration_secs <- NULL
 
@@ -194,7 +189,6 @@ syncable <- rbind(syncability_new, additional_data_new)
 
 
 # I'll clean up the data and split it into a training set and test set. 
-
 str(syncable)
 
 syncable = syncable[-131,]
@@ -218,7 +212,6 @@ train_syncable <- cbind(train_syncable, newcol)
 
 
 # ...and run the model! 
-
 formula <- isSyncable ~ key + danceability + loudness
 glm2 <- glm(formula, data=train_syncable, family="binomial")
 
@@ -229,21 +222,18 @@ summary(glm2)$coef
 
 
 # Once trained, we can use the model to make predictions for the test set.
-
 prob <- predict(glm2, newdata=test_syncable, type="response")
 prob <- round(prob,3)*100
 
 plot(glm2)
-# 
+# https://drive.google.com/drive/folders/1BJrTrBGiAiuDZcFAGHYReCQI3LxOZuG7?usp=sharing 
 
-# ANALYSIS OF RESULTS
+
+
+#### ANALYSIS OF MODEL ####
+
 # Key, Danceability and Loudnesss seem to be the best predictors based on the Coefficients. This varies slightly from my analysis, as I thought tempo would matter more.
 # Deviance Residuals are roughly symmetrical, but max and min are a bit high. 
 # With a low AIC number and plots being mostly straight lines, this model is a fit for the prediction. 
 
-#I will be adding more Statistical analysis here in the coming days, as well. 
-
-
-
-
-
+# I will be adding more Statistical analysis here in the coming days, as well. 
