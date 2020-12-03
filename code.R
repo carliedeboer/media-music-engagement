@@ -35,7 +35,7 @@ access_token <- get_spotify_access_token(client_id = Sys.getenv('SPOTIFY_CLIENT_
 
 
 # DATA SET: Tunefind Top 100 Songs of 2019 ####
-tunefind_top_100 <- read.csv('/Users/carlief/Desktop/tf_top100_2019.csv')
+tunefind_top_100 <- read.csv("https://raw.githubusercontent.com/carliedeboer/syncability/master/tunefind_top_100.csv")
 head(tunefind_top_100)
 
 # Run lapply() on Tunefind data to populate dataset with audio features from Spotify.
@@ -68,6 +68,9 @@ tunefind_top_100_audio_features$duration_secs <- NULL
 # Convert "time_signature" from an integer variable to a factor.
 factor(tunefind_top_100_audio_features$time_signature)
 
+install.packages("plyr")
+library(plyr)
+
 # Convert "key" into it's original symbols.
 tunefind_top_100_audio_features$key <- as.character(tunefind_top_100_audio_features$key)
 tunefind_top_100_audio_features$key <- revalue(tunefind_top_100_audio_features$key, c("0" = "C", "1" = "C♯,D♭", "2" = "D", "3" = 
@@ -76,13 +79,12 @@ tunefind_top_100_audio_features$key <- revalue(tunefind_top_100_audio_features$k
 tunefind_top_100_audio_features$mode <- as.logical(tunefind_top_100_audio_features$mode)
 
 
-
 #### ANALYSIS OF THE DATA ####
 # I'll be looking for trends and patterns in the audio features of these 100 songs.
 
-library(ggplot2)
 install.packages("ggplot2")
-library(ggplot)
+library(ggplot2)
+
 library(corrplot)
 
 
@@ -173,7 +175,7 @@ tempo_density
 syncability <- tunefind_top_100_audio_features 
 newcol <- data.frame(synced=("YES"))
 syncability_new <- cbind(syncability, newcol)   
-additional_data <- (read.csv("/Users/carlief/Desktop/additional_data.csv"))
+additional_data <- (read.csv("https://raw.githubusercontent.com/carliedeboer/syncability/master/additional_data.csv"))
 newcol1 <- data.frame(synced=("NO"))
 
 additional_data_new <- cbind(additional_data, newcol1)  
@@ -183,7 +185,9 @@ additional_data_new$key <- as.character(additional_data_new$key)
 additional_data_new$key <- revalue(additional_data_new$key, c("0" = "C", "1" = "C♯,D♭", "2" = "D", "3" = 
                                                         "D♯,E♭", "4" = "E", "5" =  "F", "6" = "F♯,G♭","7" = "G","8" = "G♯,A♭","9" = "A","10" = "A♯,B♭","11" = "B"))
 additional_data_new$mode <- as.logical(additional_data_new$mode)
+
 additional_data_new$duration_secs <- NULL
+syncability_new$duration_ms <- NULL
 
 syncable <- rbind(syncability_new, additional_data_new) 
 
