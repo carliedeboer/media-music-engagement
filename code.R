@@ -7,7 +7,7 @@
 #### INTRO #### 
 # As a music supervisor, I’ve always wanted to know what audio features of certain songs make them perfect for matching to film and TV A/V. 
 
-# In this project, I’ll use Tunefind’s Top 100 Songs of 2019 list merged with Spotify’s API to highlight common patterns and run a multivariable Logistic Regression model to predict what variables make these songs so “syncable”! 
+# In this project, I’ll use Tunefind’s Top 100 Songs of 2019 list merged with Spotify’s API to highlight common patterns and run a multivariable Logistic Regression model to predict what variables make these songs so “syncable”. 
 
 
 
@@ -243,13 +243,16 @@ plot(glm2)
 
 
 #### CONCLUSION ####
-# Overall, key, danceability and loudness are the best predictors of if a song will be synced or not. 
+# Overall, Key, Danceability, and Loudness are the best predictors of if a song will be synced or not. 
 
 # As a musician myself, I would have thought tempo would matter more. This may be for a variety of reasons:
   # 1. Most popular songs are a faster tempo, and therefore don't drop below the 100 bpm mark.
-  # 2. Some slower tempo songs do end up syned for more emotional, slow scenes.
-  # 3. The dataset is too small do a proper analysis of the variable. 
+  # 2. Some slower tempo songs do end up synced for more emotional, slow scenes.
+  # 3. The dataset is too small to do a proper analysis of the variable. 
 
 # Another way to analyze this dataset could also be running a linear regression model on one of the continuous variables to predict audio features of the synced songs in the future.
 
-# All that being said, music supervision is in itself an artform within and artform and the ability to predict use of data is ultimately limited. 
+# All that being said, music supervision is in itself an art form within and art form and the ability to predict use of data is ultimately limited. 
+
+
+# “Truly fertile music, the only kind that will move us, that we shall truly appreciate, will be a music conducive to dream, which banishes all reason and analysis. One must not wish first to understand and then to feel. Art does not tolerate Reason.” - Albert Camus
