@@ -1,5 +1,6 @@
-Creating Audience Connections Beyond the Screen Through Music
+Harnessing the Power of Music to Boost Engagement Beyond the Screen
 
-"code.R" is a single R script including all details. 
-"tunefind_top_100.csv" is a csv file of the dataset from Tunefind that was the basis of the project. 
-"additional_data.csv" is a csv file of an additional dataset to run the logistic regression against. 
+"code.R" is a single R script.
+"tunefind_top_100.csv" is a dataset of Tunefind's top 100 songs in 2019. 
+"tunefind_top_100_audio_features.csv" is a dataset of Tunefind's top 100 songs combined with Spotify audio features.
+"additional_data.csv" is a dataset of audio features used to validate the logistic regression. 
